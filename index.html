@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TikTok User Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fetch TikTok User Info</h1>
+    <input type="text" id="usernameInput" placeholder="Enter TikTok Username">
+    <button onclick="fetchUserData()">Get Info</button>
+
+    <div id="result"></div>
+
+    <script>
+        async function fetchUserData() {
+            const username = document.getElementById('usernameInput').value.trim();
+            if (!username) {
+                alert("Please enter a username.");
+                return;
+            }
+
+            const url = `https://tiktok1-alpha.vercel.app/api/proxy?username=${encodeURIComponent(username)}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    document.getElementById('result').innerHTML = "User not found or error.";
+                    return;
+                }
+
+                const data = await response.json();
+                const html = `
+                    <h2>${data.nickname} (@${data.uniqueId})</h2>
+                    <img src="${data.avatarLarger}" alt="Avatar">
+                `;
+                document.getElementById('result').innerHTML = html;
+            } catch (error) {
+                document.getElementById('result').innerHTML = "An error occurred while fetching data.";
+            }
+        }
+    </script>
+</body>
+</html>
